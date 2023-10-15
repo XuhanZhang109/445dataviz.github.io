@@ -21,3 +21,95 @@
     <div id="viz"></div>
     <script>
         var vlSpec = {
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Vega-Lite visualizations of the building inventory dataset",
+  "vconcat": [
+    {
+      "title": "The relationship between year constructed and year acquired of buildings",
+      "mark": "circle",
+      "data": {"url": "https://raw.githubusercontent.com/UIUC-iSchool-DataViz/fall2023-acg-acu/main/data/building_inventory.csv"},
+      "transform": [
+    {"calculate": "toNumber(datum['Year Acquired'])", "as": "YearAcquiredNumeric"},
+    {"calculate": "toNumber(datum['Year Constructed'])", "as": "YearConstructedNumeric"},
+    {"filter": "datum.YearAcquiredNumeric > 0 && datum.YearConstructedNumeric > 0"}
+  ],
+      "encoding": {
+        "x": {"field": "YearConstructedNumeric", "type": "quantitative", "scale": {"domain": [1700, 2025]},
+          "title": "Year Constructed"
+        },
+        "y": {"field": "YearAcquiredNumeric", "type": "quantitative", "scale": {"domain": [1700, 2025]},
+          "title": "Year Acquired"
+        },
+        "size": {"value": 10}
+      }
+    },
+    {
+      "title": "Total square footage of buildings in congressional districts",
+      "mark": "bar",
+      "data": {"url": "https://raw.githubusercontent.com/UIUC-iSchool-DataViz/fall2023-acg-acu/main/data/building_inventory.csv"},
+      "transform": [
+        {"calculate": "toNumber(datum['Congress Dist'])", "as": "Congress Dist (Numeric)"},
+        {"filter": "datum['Congress Dist'] !== '0'"}
+      ],
+      "encoding": {
+        "x": {
+          "field": "Congress Dist (Numeric)",
+          "type": "ordinal",
+          "title": "Congress Dist",
+          "axis": {"labelAngle": 0}
+        },
+        "y": {
+          "aggregate": "sum",
+          "field": "Square Footage",
+          "title": "Total Square Footage"
+        }
+      }
+    },
+    {
+      "title": "Average square footage per floor in congressional districts",
+      "mark": "bar",
+      "data": {"url": "https://raw.githubusercontent.com/UIUC-iSchool-DataViz/fall2023-acg-acu/main/data/building_inventory.csv"},
+      "transform": [
+        {"calculate": "toNumber(datum['Congress Dist'])", "as": "Congress Dist (Numeric)"},
+        {"calculate": "datum['Square Footage'] / datum['Total Floors']", "as": "division_Footage"},
+        {"filter": "datum['Congress Dist'] !== '0'"}
+      ],
+      "encoding": {
+        "x": {
+          "field": "Congress Dist (Numeric)",
+          "type": "ordinal",
+          "title": "Congress Dist",
+          "axis": {"labelAngle": 0}
+        },
+        "y": {
+          "aggregate": "mean",
+          "field": "division_Footage",
+          "title": "Average Square Footage Per Floor"
+        }
+      }
+    },
+    {
+      "title": "Square footage for the five most common departments",
+      "mark": {"type": "line", "strokeWidth": 1},
+      "data": {"url": "https://raw.githubusercontent.com/UIUC-iSchool-DataViz/fall2023-acg-acu/main/data/building_inventory.csv"},
+      "transform": [
+        {"aggregate": [{"op": "count", "as": "count"}, {"op": "sum", "field": "Square Footage", "as": "Total Square Footage"}],
+        "groupby": ["Agency Name", "Year Acquired"]
+      },
+      {"joinaggregate": [{"op": "sum", "field": "count", "as": "totalcount"}], "groupby": ["Agency Name"]},
+      {"window": [{"op": "dense_rank", "as": "rank"}], "sort": [{"field": "totalcount", "order": "descending"}]},
+      {"filter": "datum.rank <= 5 && datum['Year Acquired'] > 1750"}
+      ],
+      "encoding": {
+        "x": {"field": "Year Acquired", "type": "quantitative",
+        "title": "Year Acquired"
+        },
+        "y": { "field": "Total Square Footage", "title": "Total Square Footage", "type": "quantitative" },
+        "color": {"field": "Agency Name", "type": "nominal"}
+      }
+    }
+  ],
+  "resolve": {"legend":{"color": "independent"}}
+}
+
