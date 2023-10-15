@@ -1,6 +1,5 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Vega-Lite visualizations of the building inventory dataset",
   "vconcat": [
     {
       "title": "The relationship between year constructed and year acquired of buildings",
