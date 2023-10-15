@@ -13,14 +13,12 @@
 </head>
 <body>
     <p>
-        This is an example paragraph. You can do things like <strong>strongly</strong> emphasize text.
-        You can also <em>emphasize</em> text.
+        <strong>Vega-Lite visualizations of the building inventory dataset<\strong>
     </p>
     <div id="viz"></div>
     <script>
         var vlSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "title": "Vega-Lite visualizations of the building inventory dataset",
             "vconcat": [
                 {
                     "title": "The relationship between year constructed and year acquired of buildings",
@@ -104,6 +102,7 @@
                     },
                     "y": { "field": "Total Square Footage", "title": "Total Square Footage", "type": "quantitative" },
                     "color": {"field": "Agency Name", "type": "nominal"}
+                    }
                 }
             ],
             "resolve": {"legend":{"color": "independent"}}
